@@ -1,10 +1,12 @@
 .DS_Store
 pledit
 *.swp
+*.o
 autom4te.cache/
 Makefile
-src/Makefile
 config.log
 config.status
 src/.deps/
+src/Makefile
+src/plyaml
 
