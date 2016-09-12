@@ -202,9 +202,12 @@ int main(int argc, char *argv[]) {
   fread(bufIn, sizeof(char), sizeIn, plistIn);
   fclose(plistIn);
 
-  plist_from_memory(bufIn, sizeIn, &root);
+  plist_from_bin(bufIn, sizeIn, &root);
   if (!root) {
-    printf("Could not read binary plist\n");
+    plist_from_xml(bufIn, sizeIn, &root);
+  }
+  if (!root) {
+    printf("Could not read plist\n");
     return 3;
   }
 
