@@ -1,9 +1,11 @@
-#include "plist/plist.h"
 #include <stdio.h>
 #include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+
+#include <plist/plist.h>
+#include <yaml.h>
 
 int plist2yaml(plist_t root);
 
@@ -200,7 +202,7 @@ int main(int argc, char *argv[]) {
   fread(bufIn, sizeof(char), sizeIn, plistIn);
   fclose(plistIn);
 
-  plist_from_bin(bufIn, sizeIn, &root);
+  plist_from_memory(bufIn, sizeIn, &root);
   if (!root) {
     printf("Could not read binary plist\n");
     return 3;
