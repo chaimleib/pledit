@@ -1,5 +1,6 @@
 #include "plist/plist.h"
 #include <stdio.h>
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -85,6 +86,40 @@ int plistData2yaml(plist_t data) {
   return 0;
 }
 
+int plistDate2yaml(plist_t date) {
+  const int32_t osxEpoch = 978307200; // 01/01/2001 POSIX time
+  const int32_t million = 1000000;
+  int32_t osec = 0;
+  int32_t ousec = 0;
+  int64_t sec = 0;
+  int32_t usec = 0;
+  int32_t usecOverflow = 0;
+  char buff[70] = "";
+  plist_get_date_val(date, &osec, &ousec);
+
+  // convert from OSX to POSIX epoch
+  sec = osec + osxEpoch;
+
+  // normalize 0<=usec<million
+  usecOverflow = ousec / million;
+  usec = ousec % million;
+  sec += usecOverflow;
+  while (usec < 0) {
+    sec--;
+    usec += million;
+  }
+
+  // display as ISO8601
+  struct tm *utc = gmtime((time_t *) &sec);
+  if (strftime(buff, sizeof(buff), "%Y-%m-%dT%H:%M:%S", utc)) {
+    printf("!!date<%s.%06iZ>\n", buff, usec);
+    return 0;
+  } else {
+    printf("!!date<INVALID %llis, %ius>\n", sec, usec);
+    return 1;
+  }
+}
+
 int plist2yaml(plist_t root) {
   plist_type nodeType = plist_get_node_type(root);
   switch (nodeType) {
@@ -101,8 +136,7 @@ int plist2yaml(plist_t root) {
     case PLIST_DICT:
       return plistDict2yaml(root);
     case PLIST_DATE:
-      printf("date\n");
-      return 0;
+      return plistDate2yaml(root);
     case PLIST_DATA:
       return plistData2yaml(root);
     case PLIST_KEY:
@@ -128,32 +162,32 @@ int main(int argc, char *argv[]) {
   int sizeIn = 0;
   struct stat *filestats = (struct stat *) malloc(sizeof(struct stat));
   char * bufIn = 0;
-  
+
   if (argc != 2) {
     printf("No input file provided\n");
     return 1;
   }
-  
+
   fpathIn = argv[1];
   plistIn = fopen(fpathIn, "rb");
-  
+
   if (!plistIn) {
     printf("Could not open file\n");
     return 2;
   }
-  
+
   stat(fpathIn, filestats);
   sizeIn = filestats->st_size;
   bufIn = (char *) malloc(sizeof(char) * (sizeIn + 1));
   fread(bufIn, sizeof(char), sizeIn, plistIn);
   fclose(plistIn);
-  
+
   plist_from_bin(bufIn, sizeIn, &root);
   if (!root) {
     printf("Could not read binary plist\n");
     return 3;
   }
-  
+
   return plist2yaml(root);
 }
 
