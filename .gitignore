@@ -1,4 +1,5 @@
 .DS_Store
 pledit
 *.swp
+autom4te.cache/
 
