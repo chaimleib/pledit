@@ -1,6 +1,0 @@
-plyaml:
-	gcc -o plyaml -lplist src/plyaml.c
-
-clean:
-	rm -rf plyaml
-
