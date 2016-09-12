@@ -2,4 +2,9 @@
 pledit
 *.swp
 autom4te.cache/
+Makefile
+src/Makefile
+config.log
+config.status
+src/.deps/
 
