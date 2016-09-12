@@ -120,6 +120,19 @@ int plistDate2yaml(plist_t date) {
   }
 }
 
+int plistKey2yaml(plist_t key) {
+  printf("!!key");
+  char *val = NULL;
+  plist_get_key_val(key, &val);
+  if (val) {
+    printf("<%s>\n", val);
+    free(val);
+  } else {
+    printf("<>\n");
+  }
+  return 0;
+}
+
 int plist2yaml(plist_t root) {
   plist_type nodeType = plist_get_node_type(root);
   switch (nodeType) {
@@ -140,13 +153,12 @@ int plist2yaml(plist_t root) {
     case PLIST_DATA:
       return plistData2yaml(root);
     case PLIST_KEY:
-      printf("key\n");
-      return 0;
+      return plistKey2yaml(root);
     case PLIST_UID:
-      printf("uid\n");
+      printf("!!uid\n");
       return 0;
     case PLIST_NONE:
-      printf("no type\n");
+      printf("!!none\n");
       return 0;
     default:
       printf("UNKNOWN\n");
