@@ -70,6 +70,13 @@ int plistUint2yaml(plist_t u) {
   return 0;
 }
 
+int plistUid2yaml(plist_t u) {
+  uint64_t val = 0;
+  plist_get_uid_val(u, &val);
+  printf("!!uid<%llu>\n", val);
+  return 0;
+}
+
 int plistReal2yaml(plist_t real) {
   double val = 0.0;
   plist_get_real_val(real, &val);
@@ -155,8 +162,7 @@ int plist2yaml(plist_t root) {
     case PLIST_KEY:
       return plistKey2yaml(root);
     case PLIST_UID:
-      printf("!!uid\n");
-      return 0;
+      return plistUid2yaml(root);
     case PLIST_NONE:
       printf("!!none\n");
       return 0;
