@@ -98,7 +98,8 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_plyaml_OBJECTS = plyaml.$(OBJEXT) pl2yaml.$(OBJEXT)
+am_plyaml_OBJECTS = plyaml.$(OBJEXT) pl2yaml.$(OBJEXT) \
+	plistExtras.$(OBJEXT)
 plyaml_OBJECTS = $(am_plyaml_OBJECTS)
 plyaml_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -246,7 +247,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 AM_CFLAGS = --pedantic -Wall -std=c99 -O2
 AM_LDFLAGS = -lplist -lyaml
-plyaml_SOURCES = plyaml.c pl2yaml.c
+plyaml_SOURCES = plyaml.c pl2yaml.c plistExtras.c
 all: all-am
 
 .SUFFIXES:
@@ -334,6 +335,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pl2yaml.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plistExtras.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/plyaml.Po@am__quote@
 
 .c.o:
