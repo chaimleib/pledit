@@ -1,12 +1,18 @@
 #include "plistExtras.h"
 
+/**
+ * @returns the smaller of two size_t's
+ */
 inline size_t minSize(size_t a, size_t b) {
   return (a > b) ? b : a;
 }
 
+/**
+ * @returns whether data starts with preamble.
+ */
 inline bool hasPreamble(const char *preamble, size_t preambleBytes, char *data, size_t dataBytes) {
-  size_t bytes = minSize(dataBytes, preambleBytes);
-  return 0 == memcmp(data, preamble, bytes);
+  if (preambleBytes > dataBytes) return false;
+  return 0 == memcmp(data, preamble, preambleBytes);
 }
 
 int loadPlist(char *data, size_t bytes, plist_t *root) {

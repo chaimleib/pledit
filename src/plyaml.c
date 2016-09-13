@@ -21,6 +21,13 @@ void printPlistType(char *data, size_t bytes) {
   }
 }
 
+/**
+ * Read a file specified by fPath into buffer, and set bytes to the file size.
+ * @param fPath location of the file
+ * @param buffer pointer to the resulting file data. Caller is responsible for freeing it
+ * @param bytes size of the file
+ * @return whether there was an error
+ */
 int loadFile(char *fPath, char **buffer, size_t *bytes) {
   int err = 0;
   FILE *file = NULL;
