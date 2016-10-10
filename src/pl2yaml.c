@@ -1,5 +1,7 @@
 #include "pl2yaml.h"
 
+int plistNode2yaml(plist_t root);
+
 int plistArray2yaml(plist_t array) {
   uint32_t arraySize = plist_array_get_size(array);
   printf("!!array<%u>\n", arraySize);
@@ -8,7 +10,7 @@ int plistArray2yaml(plist_t array) {
   for (i=0; i<arraySize; i++) {
     printf("%u:", i);
     val = plist_array_get_item(array, i);
-    plist2yaml(val);
+    plistNode2yaml(val);
   }
   return 0;
 }
@@ -26,7 +28,7 @@ int plistDict2yaml(plist_t dict) {
     plist_dict_next_item(dict, iter, &key, &val);
     printf("'%s'", key);
     free(key);
-    plist2yaml(val);
+    plistNode2yaml(val);
   }
   return 0;
 }
@@ -133,7 +135,7 @@ int plistKey2yaml(plist_t key) {
   return 0;
 }
 
-int plist2yaml(plist_t root) {
+int plistNode2yaml(plist_t root) {
   plist_type nodeType = plist_get_node_type(root);
   switch (nodeType) {
     case PLIST_BOOLEAN:
@@ -163,4 +165,50 @@ int plist2yaml(plist_t root) {
       printf("UNKNOWN\n");
       return 1;
   }
+}
+
+int plist2yaml(plist_t root) {
+  yaml_emitter_t emitter;
+  yaml_event_t event;
+  yaml_node_t * node;
+  // yaml_node_item_t *item;
+  // yaml_node_pair_t *pair;
+  
+  int done = 0;
+
+  memset(&emitter, 0, sizeof(emitter));
+  memset(&event, 0, sizeof(event));
+
+  if (!yaml_emitter_initialize(&emitter)) {
+    fprintf(stderr, "Could not initialize emitter: ");
+    switch (emitter.error) {
+      case YAML_MEMORY_ERROR:
+        fprintf(stderr, "Not enough memory\n");
+        break;
+      case YAML_WRITER_ERROR:
+        fprintf(stderr, "Writer error: %s\n", emitter.problem);
+        break;
+      case YAML_EMITTER_ERROR:
+        fprintf(stderr, "Emitter error: %s\n", emitter.problem);
+        break;
+      default:
+        // shouldn't happen
+        fprintf(stderr, "Internal error\n");
+        break;
+    }
+    yaml_emitter_delete(&emitter);
+    return 1;
+  }
+
+  yaml_emitter_set_output_file(&emitter, stdout);
+
+  yaml_emitter_set_canonical(&emitter, 1);
+  yaml_emitter_set_unicode(&emitter, 1);
+
+  while (!done) {
+    // Get event
+    done = 1; // remove
+        
+  }
+  return 0;
 }

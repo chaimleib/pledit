@@ -1,5 +1,5 @@
-#ifndef __PLIST_EXTRAS_H
-#define __PLIST_EXTRAS_H
+#ifndef _PLEXTRAS_H
+#define _PLEXTRAS_H
 
 #include <stdio.h>
 #include <stdlib.h>

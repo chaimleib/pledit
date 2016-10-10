@@ -4,7 +4,7 @@
 
 #include <plist/plist.h>
 #include <pl2yaml.h>
-#include <plistExtras.h>
+#include <plextras.h>
 
 
 void printPlistType(char *data, size_t bytes) {

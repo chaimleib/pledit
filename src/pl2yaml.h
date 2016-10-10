@@ -1,5 +1,5 @@
-#ifndef __PL2YAML_H
-#define __PL2YAML_H
+#ifndef _PL2YAML_H
+#define _PL2YAML_H
 
 #include <stdlib.h>
 #include <stdio.h>
